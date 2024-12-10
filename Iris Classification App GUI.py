@@ -1,5 +1,8 @@
 import tkinter as tk
- 
+import joblib
+import pandas as pd
+
+#Create UI Application
 window = tk.Tk()
 
 frame1 = tk.Frame()
@@ -31,18 +34,29 @@ input_petal_width = tk.Entry(frame2, width=10)
 input_petal_width.grid(row=3, column=1)
 tk.Label(frame2, text=" cm", width=5, anchor="w").grid(row=3, column=2)
 
+#Predict Model
+model = joblib.load("model.pkl")
+
 def predict_result():
-    sepal_length = float(input_sepal_length.get())
-    sepal_width = float(input_sepal_width.get())
-    petal_length = float(input_petal_length.get())
-    petal_width = float(input_petal_width.get())
-    predict = "Iris Setosa"
-    output_result.config(text=  f"Sepal length : {sepal_length} cm\n"
-                                f"Sepal width : {sepal_length} cm\n"
-                                f"Petal length : {sepal_length} cm\n"
-                                f"Petal width : {sepal_length} cm\n"
-                                f"\n"
-                                f"Sepal length : {sepal_length} cm")
+    try:
+        sepal_length = float(input_sepal_length.get())
+        sepal_width = float(input_sepal_width.get())
+        petal_length = float(input_petal_length.get())
+        petal_width = float(input_petal_width.get())
+
+        input_data = {"sepal.length": [sepal_length], "sepal.width": [sepal_width], 
+                      "petal.length": [petal_length], "petal.width": [petal_width]}
+        df = pd.DataFrame(input_data)
+
+        predict = model.predict(df)
+        output_result.config(text=f"Sepal length : {sepal_length} cm\n"
+                                  f"Sepal width : {sepal_width} cm\n"
+                                  f"Petal length : {petal_length} cm\n"
+                                  f"Petal width : {petal_width} cm\n"
+                                  f"\n"
+                                  f"Predict result : Iris {predict[0]}")
+    except ValueError:
+        output_result.config(text="Error")
 
 frame3 = tk.Frame()
 frame3.pack(pady=10)
@@ -50,8 +64,7 @@ frame3.pack(pady=10)
 bt_submit = tk.Button(frame3, text="Submit", width=25, command=predict_result)
 bt_submit.pack(pady=(0, 5))
 
-output_result = tk.Label(frame3, width=25, height=5, justify="left")
+output_result = tk.Label(frame3, width=25, height=6, justify="left", anchor="nw",)
 output_result.pack()
-
 
 window.mainloop()
