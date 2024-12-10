@@ -4,11 +4,14 @@ import pandas as pd
 
 #Create UI Application
 window = tk.Tk()
+window.title("Iris Classification")
+window.resizable(False, False)
+window.geometry("250x280")
 
 frame1 = tk.Frame()
 frame1.pack()
 
-title = tk.Label(text="Iris Classification", width=30)
+title = tk.Label(text="Iris Classification", width=30, height=2)
 title.pack(pady=(0, 10))
 
 frame2 = tk.Frame()
